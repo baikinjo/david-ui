@@ -25,7 +25,8 @@ export default class Checkbox extends React.Component<*, *> {
     normalize: Function,
     placeholder: string,
     type: string,
-    style: CSSRule,
+    status: boolean,
+    style: CSSRule
   } & FieldProps
 
   state: {
@@ -40,15 +41,20 @@ export default class Checkbox extends React.Component<*, *> {
     hover: false
   }
 
-  componentWillMount () {
+  componentWillMount() {
+    console.log(this.props)
     if (this.props && this.props.meta) {
-      this.setState({
-        checked: this.props.meta.initial
-      })
+      if (this.props.status) {
+        this.setState({ checked: true })
+      } else {
+        this.setState({
+          checked: this.props.meta.initial
+        })
+      }
     }
   }
 
-  render () {
+  render() {
     const {
       fullwidth,
       input,
@@ -56,19 +62,23 @@ export default class Checkbox extends React.Component<*, *> {
       meta,
       normalize,
       placeholder,
+      status,
       style
     } = this.props
-    const {
-      hover,
-      active,
-      checked
-    } = this.state
+    const { hover, active, checked } = this.state
 
-    const boxStatusClass = classes(hover && 'hover', checked && 'checked', active && 'active')
+    const boxStatusClass = classes(
+      hover && 'hover',
+      checked && 'checked',
+      active && 'active'
+    )
 
     return (
       <FieldWrapper
-        parentClassName={classes(fullwidth ? CLASSNAMES.parentFullWidth : CLASSNAMES.parent, 'no-select')}
+        parentClassName={classes(
+          fullwidth ? CLASSNAMES.parentFullWidth : CLASSNAMES.parent,
+          'no-select'
+        )}
         style={{
           ...style,
           marginBottom: 0
@@ -80,26 +90,30 @@ export default class Checkbox extends React.Component<*, *> {
           onMouseDown={() => {
             this.setState({ active: true })
           }}
-          onMouseEnter={() => { this.setState({ hover: true }) }}
-          onMouseLeave={() => { this.setState({ hover: false }) }}
-          onMouseUp={() => { 
-            this.setState({ 
-              checked: !checked, active: false 
-            }, () => {
-              input.onChange(this.state.checked)
-            }) 
+          onMouseEnter={() => {
+            this.setState({ hover: true })
+          }}
+          onMouseLeave={() => {
+            this.setState({ hover: false })
+          }}
+          onMouseUp={() => {
+            this.setState({
+              checked: !checked,
+              active: false
+            })
           }}
         >
           <div className={classes(CLASSNAMES.checkboxWrapper)}>
             <span className={classes('checkbox', boxStatusClass)}>
-              { checked && <i className="material-icons">check</i> }
+              {checked && <i className="material-icons">check</i>}
             </span>
             <input
               id={`jams-${input.name}`}
               className={CLASSNAMES.input}
               normalize={normalize}
               placeholder={placeholder}
-              type='checkbox'
+              type="checkbox"
+              checked={!checked}
               {...input}
             />
           </div>
@@ -120,8 +134,8 @@ const CLASSNAMES = stylesheet({
         display: 'inline-block',
         fontWeight: 700,
         maxWidth: '100%',
-        paddingLeft: 10,
-      },
+        paddingLeft: 10
+      }
     }
   },
   checkboxWrapper: {
@@ -165,27 +179,27 @@ const CLASSNAMES = stylesheet({
       },
       '&>.checked': {
         background: '#1ab394',
-        border: '2px solid #1ab394',
+        border: '2px solid #1ab394'
       },
       '&>.hover': {
         // Styling for checkbox in hover state.
       },
       '& i': {
         color: '#ffffff',
-        fontSize: 18,
+        fontSize: 18
       },
       '&>span': {
         border: '2px solid #cacaca',
         display: 'inline-block',
         height: 22,
-        width: 22,
-      },
-    },
+        width: 22
+      }
+    }
   },
   input: {
     marginBottom: 5,
     opacity: 0,
-    position: 'absolute',
+    position: 'absolute'
   },
   parent: {
     cursor: 'pointer',
@@ -195,6 +209,6 @@ const CLASSNAMES = stylesheet({
   },
   parentFullWidth: {
     cursor: 'pointer',
-    margin: 0,
-  },
+    margin: 0
+  }
 })
