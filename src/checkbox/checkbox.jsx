@@ -97,10 +97,15 @@ export default class Checkbox extends React.Component<*, *> {
             this.setState({ hover: false })
           }}
           onMouseUp={() => {
-            this.setState({
-              checked: !checked,
-              active: false
-            })
+            this.setState(
+              {
+                checked: !checked,
+                active: false
+              },
+              () => {
+                input.onChange(this.state.checked)
+              }
+            )
           }}
         >
           <div className={classes(CLASSNAMES.checkboxWrapper)}>
